@@ -1,24 +1,24 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import courseRoutes from './routes/courseRoutes.js';
-dotenv.config();
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+require("dotenv").config();
+
+const courseRoutes = require("./routes/courseRoutes");
 
 const app = express();
+const PORT = process.env.PORT || 5000;
+
 app.use(cors());
 app.use(express.json());
-app.use('/api/courses', courseRoutes);
 
-// Example default route
-app.get("/", (req, res) => {
-  res.send("LMS Backend is running");
-});
+app.use("/api/courses", courseRoutes);
 
-// Connect DB and start server
+
+
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("MongoDB connected");
-    app.listen(5000, () => console.log("Server running on http://localhost:5000"));
-  })
-  .catch(err => console.log(err));
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
